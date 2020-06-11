@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Generador SQL</title>
+	<script>
+		// Autores: Carlos Andres Cobo - Juan David Sarmiento
+		// Descripcion: Software para la creacion de inserts masivos para mysql
+		// Fecha: 2017-11-18
+
+
+		var tabla = prompt("Nombre Tabla");
+		var campos = parseInt(prompt("Total campos"));
+		var regist = parseInt(prompt("Total registros"));
+		document.write("Genera script para tabla: " + tabla);
+		document.write("<br>Total campos para esa tabla: " + campos);
+
+		var tipocampo = [];
+		for (var cont = 1; cont <= campos; cont++) {
+			tipocampo[cont] = prompt("Campo " + cont + " => Tipo: 0. Código, 1. Nombre, 2. Apellido, 3. Ciudad, 4. Correo, 5. Direccion, 6. Tipo de Sangre, 7. Numero Entero, 8. Numero Real, 10. TextoAzar, 11. IPv4, 13. TextoFormateado, 14. Fecha");
+		}
+
+		//Genera el script
+		for (var num = 1; num <= regist; num++) {
+			document.write("<br>insert into " + tabla + " values (");
+			for (var cont = 1; cont <= campos; cont++) {
+				debugger;
+				// Codigo ---
+				if (tipocampo[cont] == 0) {
+					// Valida si existe la variable inicio, de lo contrario pregunta en que numero inicia la generacion de los codigos
+					if (!inicio) {
+						var inicio = parseInt(prompt("¿En que número entero desea iniciar los códigos?"));
+					}
+					document.write(getCodigo(inicio));
+				}
+
+				// Nombres ---
+				if (tipocampo[cont] == 1) document.write("'" + getNombre() + "'");
+
+				// Apellidos ---
+				if (tipocampo[cont] == 2) document.write("'" + getApellidos() + "'");
+
+				// Ciudad ---
+				if (tipocampo[cont] == 3) document.write("'" + getCiudad() + "'");
+
+				// Correos ---
+				if (tipocampo[cont] == 4) document.write("'" + getCorreos() + "'");
+
+				// Direccion ---
+				if (tipocampo[cont] == 5) document.write("'" + getDireccion() + "'");
+
+				// Tipo de Sangre ---
+				if (tipocampo[cont] == 6) document.write("'" + getTipoSangre() + "'");
+
+				// Numero Entero ---
+				if (tipocampo[cont] == 7) {
+					// Valida si existe la variable minimo y maximo
+					if (!minimo) {
+						var minimo = parseInt(prompt("¿Que número desea que sea el minimo?"));
+					}
+					if (!maximo) {
+						var maximo = parseInt(prompt("¿Que número desea que sea el maximo?"));
+					}
+					document.write(getEntero(minimo, maximo));
+				}
+
+				// Numero Entero ---
+				if (tipocampo[cont] == 8) {
+					// Valida si existe la variable minimo y maximo
+					if (!minimo) {
+						var minimo = parseInt(prompt("¿Que número desea que sea el minimo?"));
+					}
+					if (!maximo) {
+						var maximo = parseInt(prompt("¿Que número desea que sea el maximo?"));
+					}
+					document.write(getReal(minimo, maximo));
+				}
+
+				// Letra ---
+				if (tipocampo[cont] == 9) document.write("'" + getLetra() + "'")
+
+				// Texto al Azar ---
+				if (tipocampo[cont] == 10) {
+					// Se ingresa un numero de letras que debe tener el texto
+					if (!tamano) {
+						var tamano = parseInt(prompt("Ingrese el tamaño del texto"));
+					}
+					document.write("'" + TextoAzar(tamano) + "'")
+				}
+
+				// IPv4 ---
+				if (tipocampo[cont] == 11) document.write("'" + getIpv4(1, 254) + "." + getIpv4(1, 254) + "." + getIpv4(1, 254) + "." + getIpv4(1, 254) + "'");
+
+				// Texto Formateado ---
+
+				if (tipocampo[cont] == 13) document.write("'" + textoFormateado() + "-" + textoFormateado2() + "'");
+
+				// Fecha ---
+
+				if (tipocampo[cont] == 14) document.write("'" + getFecha(new Date(1997, 0, 1), new Date()) + "'");
+
+				if (cont < campos) document.write(", ");
+			}
+			document.write(");");
+		}
+
+		// Funcion para obtener el Codigo de manera aleatoria
+		function getCodigo(inicio) {
+
+			const arr = new Array(inicio);
+			for (let i = 0; i < (inicio * 2); i++) {
+				arr[i] = i + 1;
+			}
+
+			arr.sort(() => Math.random() > 0.5 ? 1 : -1);
+			const loteria = arr.slice(0, 1);
+
+			return loteria;
+
+		}
+
+		// Funcion para obtener la direccion Ipv4 de manera aleatoria
+		function getIpv4(min, max) {
+
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+
+		// Funcion para obtener el Nombres de manera aleatoria
+		function getNombre() {
+
+			var nombres = [
+				"Juan", "Pedro", "Felipe", "Mateo", "Juana", "Emma", "Olivia", "Francisco", "Bruno", "Simon",
+				"Abril", "Azul", "Lola", "Alma", "Sebastian", "Andres", "Pepe", "Emilio", "Luz", "Marina",
+				"Leonidas", "Efrain", "Frank", "Eduardo", "Alba", "Fernando", "Marcela", "Laura", "Juan", "David",
+				"Cesar", "Mauricio", "Jorge", "Miguel", "Antonia", "Valentina", "Alejandro", "Camilo", "Juanita", "Carlos",
+				"Guillermo", "Cristina", "Evelyn", "Camila", "Dayan", "Angel", "Luis", "Arnold", "Marco", "Amparo",
+				"Milton", "Angela", "Andrea", "Anderson", "Cristian", "Ivan", "Pablo", "Sam", "Elvia", "Ronald",
+				"Soraya", "Santiago", "Martina", "Melissa", "Adriana", "Luisa", "Fernanda", "Lucia", "Alison", "Valeri",
+				"Michael", "Steve", "Falcao", "James", "Gloria", "Ruby", "Guido", "Valeria", "Adan", "Eva",
+				"Esteban", "Stiven", "Yerson", "Fabio", "Diana", "Carolina", "Angelica", "Daniela", "Daniel", "Juancho",
+				"Karina", "Alex", "Alexandra", "Alvaro", "Ana", "Beatriz", "Consuelo", "Danna", "Paola", "Becky", "Anselmo",
+				"Edud", "Erica", "Federico", "Harrison", "Hasbleidy", "Jan", "Jason", "Jesy", "Joan", "Jordy",
+				"Josue", "Manuel", "Julieta", "Natalia", "Yana", "Sergio", "Yordin", "Elkin", "Manuela", "Francisca",
+				"Ezio", "Pili", "Pilar", "Matheus", "Juliancho", "Kevin", "Alejandra", "Charles", "Karen", "Karla",
+				"Teto", "Hitler", "Paula", "Paul", "Carol", "Samantha", "Camille", "Nicolas", "Nicol",
+				"Yessenia", "Italo", "Jordan", "Lina", "Loana", "Ashley", "Viviana", "Jaime", "Katherin", "Tatan",
+				"Jean", "Amaury", "Tatiana", "Edwin", "Gustavo", "Sammer", "Mariana", "Harry", "Dayana", "Dahiana",
+				"Isabella", "Roberto", "Melany", "Satuario", "Marisol", "Johana", "Cindy", "Bernardo", "Mayra", "Sara",
+				"Michelle", "Julissa"
+			];
+			var min = 0;
+			var max = nombres.length;
+
+			var aleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
+			return nombres[aleatorio];
+		}
+
+		// Funcion para obtener el Apellidos de manera aleatoria
+		function getApellidos() {
+
+			var apellidos = [
+				"Osorio", "Sarmiento", "Cobo", "Rojas", "Ospina", "Gutierrez", "Arroyo", "Valencia", "Ramirez",
+				"Reina", "Aldina", "Garcia", "Ruiz", "Bautista", "Robles", "Sanchez", "Silva", "Maldonado",
+				"Peña", "Hernandez", "Herrera", "Sullivan", "Betancourt", "Castaño", "Mallama", "Chican",
+				"Lesmes", "Lugo", "Clavijo", "Cifuentes", "Mera", "Diaz", "Lorudo", "Guzman", "Velez", "Rios",
+				"Villota", "Ortega", "Meza", "Romero", "Beron", "Navarrete", "Velasquez", "Lopez", "Garzon",
+				"Porto", "Torresro", "Marquez", "Conde", "Pardo", "Varela", "Luna", "Almeida", "Prada", "Batioja",
+				"Montero", "Tamayo", "Prieto", "Escalante", "Correo", "Fajardo", "Carvajal", "Rico",
+				"Castrillon", "Torres", "Caicedo", "Jimenez", "Cortes", "Castro", "Bacca", "Lagos", "Pizarro",
+				"Polania", "Roldan", "Montilla", "Rivera", "Olaya", "Madrid", "Campaz", "Avila", "Pava", "Vivas",
+				"Contreras", "Patiño", "Hoyos", "Perez", "Tascon", "Ballesteros", "Bustos", "Correa",
+				"Puertas", "Lara", "Orejuela", "Lenis", "Olave", "Baranoha", "Acosta", "Cadernas", "Agredo",
+				"Hurtado", "Bernal", "Restrepo", "Arboleda", "Perea", "Carillo", "Terranova", "Holguin",
+				"Gomez", "Jackson", "Mendoza", "Jaramillo", "Renza", "Gonzalez", "Parra", "Bermudez",
+				"Vargas", "Serrato", "Velasco", "Acevedo", "Amaya", "Galarcio", "Vidales", "Pantoja",
+				"Mosquera", "Orozco", "Berrio", "Ibañez", "Castillo", "Angulo", "Zuñiga", "Atehortua",
+				"Ariza", "Avila", "Arteaga", "Molina", "Lucero", "Esquivel", "Calero", "Valderrama",
+				"Montes", "Medina", "Moreno", "Rincon", "Cote", "Ceballos", "Rua", "Rubiano", "Monzon",
+				"Paez", "Taimbud", "Obonaga", "Navia", "Rosas", "Savedra", "Hoffman", "Henao", "Guespud",
+				"Villada", "Martinez", "Giraldo", "Alzate", "Mena", "Rosero", "Romero", "Morales",
+				"Trujillo", "Montero", "Gordillo", "Mejia", "Paz", "Chacon", "Moya", "Casique"
+			];
+			var min = 0;
+			var max = apellidos.length;
+
+			var aleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
+			return apellidos[aleatorio];
+		}
+
+		// Funcion para obtener la Ciudad de manera aleatoria
+		function getCiudad() {
+
+			var ciudades = [
+				'alcala', 'andalucia', 'ansermanuevo', 'argelia', 'bolivar', 'buenaventura', 'buga', 'bugalagrande', 'caicedonia', 'cali', 'calima',
+				'candelaria', 'cartago', 'dagua', 'el aguila', 'el cairo', 'el cerrito', 'el dovio', 'florida', 'ginebra', 'guacari', 'jamundi',
+				'la cumbre', 'la union', 'la victoria', 'obando', 'palmira', 'pradera', 'restrepo', 'riofrio', 'roldanillo', 'san pedro', 'sevilla',
+				'toro', 'trujillo', 'tulua', 'ulloa', 'versalles', 'vijes', 'yotoco', 'yumbo', 'zarzal'
+			];
+			var min = 0;
+			var max = ciudades.length;
+
+			var aleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
+			return ciudades[aleatorio];
+		}
+
+		// Funcion para obtener los Correos de manera aleatoria
+		function getCorreos() {
+
+			var correos = [
+				"juribe@idiomas.udea.edu.co", "hersy@epm.net.co", "jferdusi@terra.com", "onaranjo @idiomas.edu.co", "urestrepo@idiomas.udea.edu.co",
+				"onaranjo @idiomas.udea.edu.co", "vhiguita@idiomas.udea.edu.co", "dcanas@idiomas.udea.edu.co", "julianaparis@hotmail.com", "juanspider39@hotmail.com",
+				"aguevara@idiomas.udea.edu.co", "aguevara@idiomas.udea.edu.co", "jhutado@ idomas.udea.edu.co", "domini26@latinmail.com", "julianaparis@hotmail.com",
+				"juandavidlopez@ubicar.com", "vivian_981@yahoo.com", "andresiocarga@hotmail.com", "mpulido@latinmail.com", "yessy_39@hotmail.com", "ashida_barak@yahoo.com",
+				"menadel@hotmail.com", "m.fdez_87@hotmail.com", "reinald_34@hotmail.com", "ibrahin@cied.rimed.cu"
+			];
+
+			var min = 0;
+			var max = correos.length;
+
+			var aleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
+			return correos[aleatorio];
+		}
+
+		// Funcion para obtener la Direccion de manera aleatoria
+		function getDireccion() {
+
+			var direcciones = [
+				"Calle Tapem conjugàveu algaliareu, 124B 17ºF", "Callejón Connumerara iriso esbaltissis, 143 6ºA",
+				"Alameda Embruixadora desfaedors sufixéssim, 296 20ºA", "Callejón Carrinclonegi, 258",
+				"Paseo Esbrossis periostosis, 282 1ºE", "Carrera Traspostaràs pagesa eixavuiréssiu desbotarien, 21 19ºB",
+				"Cañada Uràrties polsinessis estriésseu, 29B 6ºA", "Carretera Replantejaràs saquejaríem, 40A 11ºC",
+				"Camino Compatibilitzin lemúrids passivam, 273 1ºF", "Plaza Homiliaris estantolàssiu, 19 3ºG",
+				"Ronda Necrosassin semblessen almadraver, 162B 7ºH", "Pasadizo Debategament petúnia escorrancar, 157A",
+				"Rambla Escatosos enforquillaríem envespries, 297A 13ºC", "Carretera Embridaria, 171 15ºD",
+				"Travesía Paredaven, 59", "Vía Teulades encetall bolcava fisiologia, 155", "Carrera Inapercebudes, 137 3ºF",
+				"Vía Trampelin, 122A", "C. Comercial Retentisquen brunyíreu conquilles reféu, 112B 4ºF",
+				"Cuesta Incests teomorfismes ondulosos ratonejau, 275A 13ºB", "Urbanización Biogàs esgotadors, 110B 1ºB",
+				"Alameda Enlleganyéssim benferri accidentant reocuparíeu, 74A", "Glorieta Telitis, 196 8ºC",
+				"Vía Abjuracions espessíreu retraduïsses, 185B 15ºA", "Paseo Apilono, 85A 4ºC",
+				"Urbanización Alcalescents decamparàs preferísseu billonareu, 253A 1ºC", "Carrera Avern, 129A",
+				"Carretera Perbocaràs particularitzàs adopere, 1 19ºC", "Vía Qüestionaven, 118A",
+				"Carretera Trincàrem enferritgessen cristal·litzésseu embotellassin, 288 16ºA", "Calle Ingredients, 298A",
+				"Carretera Revencillada, 170 10ºB", "Avenida Apel·lants obligàveu grunyiran, 151 2ºF",
+				"Pasadizo Trobars emmarciríeu ressegellaré, 252 6ºD", "Plaza Acidulareu, 233B", "Alameda Reconquistaven aneroide, 134A",
+				"Carrera Emanen retransmeteren, 124A 3ºD", "Pasaje Esvellegassin benicarlandos amotem, 125A",
+				"Pasaje Gratulí modernitzà atomistes, 12A 13ºE", "Pasaje Censuraré emmanteu, 274B 13ºD",
+				"Callejón Nasalitzaran aguerrir, 160B 11ºA", "Paseo Remembrances, 117 16ºF",
+				"Carretera Fulmina periclinals bergantegéssim, 37B", "Alameda Tipòlegs emergit irroguen aparellàrem, 234A",
+				"Avenida Abkhàzia, 68 11ºE", "Glorieta Rinxolat, 25B 18ºC", "Travesía Entregirats, 265B 16ºA", "C. Comercial Maurareu, 262 16ºA",
+				"Calle Abarloïs sonsejades malejares, 107 10ºG", "Paseo Desdobleguem, 286B 16ºE", "Calle Desempaléssiu aspres polsinàvem ventafocsos, 51B 18ºE"
+			];
+
+			var min = 0;
+			var max = direcciones.length;
+
+			var aleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
+			return direcciones[aleatorio];
+		}
+
+		// Funcion para obtener el Tipo de Sangre de manera aleatoria
+		function getTipoSangre() {
+
+			var tipoSangre = [
+				"A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"
+			];
+
+			var min = 0;
+			var max = tipoSangre.length - 1;
+
+			var aleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
+			return tipoSangre[aleatorio];
+
+		}
+
+		// Funcion para obtener el Numero Entero de manera aleatoria
+		function getEntero(minimo, maximo) {
+
+			var entero = Math.floor(Math.random() * (maximo - minimo + 1)) + minimo;
+
+			return Math.round(entero);
+		}
+
+		// Funcion para obtener un Numero Real de manera aleatoria
+		function getReal(minimo, maximo) {
+
+			var divisor = Math.floor(Math.random() * (maximo - minimo + 1)) + minimo;
+
+			var real = Math.floor(Math.random() * (maximo - minimo + 1)) + minimo;
+
+			return (real / divisor).toFixed(2);
+		}
+
+		// Funcion para obtener una Letra de manera aleatoria
+		function getLetra() {
+			var text = "";
+			var varras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+			for (var i = 0; i < 1; i++)
+				text += varras.charAt(Math.floor(Math.random() * varras.length));
+			return text;
+		}
+
+
+		function TextoAzar(tamano) {
+			var text = "";
+			var varras = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+			for (var i = 0; i < tamano; i++)
+				text += varras.charAt(Math.floor(Math.random() * varras.length));
+			return text;
+		}
+
+
+
+
+
+		function textoFormateado() {
+			var varras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			var aNumeros = "0123456789";
+			var text = "";
+			var text2 = "";
+
+			for (var i = 0; i < 3; i++)
+				text += varras.charAt(Math.floor(Math.random() * varras.length));
+			for (var i = 0; i < 3; i++)
+				text2 += aNumeros.charAt(Math.floor(Math.random() * aNumeros.length));
+
+			return text + text2;
+		}
+
+
+		function textoFormateado2() {
+			var varras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			var aNumeros = "0123456789";
+			var text = "";
+			var text2 = "";
+			var text3 = "";
+
+			for (var i = 0; i < 1; i++)
+				text += varras.charAt(Math.floor(Math.random() * varras.length));
+			text2 += aNumeros.charAt(Math.floor(Math.random() * aNumeros.length));
+
+			return text + text2;
+		}
+
+
+
+
+		function getFecha(start, end) {
+			return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+		}
+	</script>
+</head>
+
+<body>
+
+</body>
+
+</html>
